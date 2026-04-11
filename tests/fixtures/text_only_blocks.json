@@ -1,0 +1,8 @@
+{
+  "text": "ignored when blocks present",
+  "blocks": [
+    {"text": "Première section du document.\nAvec une seconde ligne."},
+    {"text": "Deuxième section.\nElle contient aussi deux lignes."},
+    {"text": "Conclusion en une ligne."}
+  ]
+}

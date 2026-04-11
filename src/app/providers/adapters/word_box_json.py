@@ -86,6 +86,10 @@ class WordBoxJsonAdapter(BaseAdapter):
                 bbox = (bbox[0] * factor, bbox[1] * factor, bbox[2] * factor, bbox[3] * factor)
                 polygon = [(x * factor, y * factor) for x, y in polygon]
 
+            # Clamp negative coordinates (real OCR data can produce these)
+            bbox = (max(0.0, bbox[0]), max(0.0, bbox[1]), bbox[2], bbox[3])
+            polygon = [(max(0.0, x), max(0.0, y)) for x, y in polygon]
+
             word_bboxes.append(bbox)
             word_data.append({
                 "bbox": bbox,
