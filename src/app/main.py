@@ -11,15 +11,23 @@ from typing import AsyncIterator
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from src.app.settings import Settings, get_settings
+from src.app.api import init_services, shutdown_services
+from src.app.api.routes_exports import router as exports_router
+from src.app.api.routes_health import router as health_router
+from src.app.api.routes_jobs import router as jobs_router
+from src.app.api.routes_providers import router as providers_router
+from src.app.api.routes_viewer import router as viewer_router
+from src.app.settings import get_settings
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     """Startup / shutdown lifecycle."""
-    settings: Settings = get_settings()
+    settings = get_settings()
     settings.ensure_directories()
+    init_services(settings)
     yield
+    shutdown_services()
 
 
 app = FastAPI(
@@ -37,15 +45,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# -- Register routers --------------------------------------------------------
 
-# -- Health route (always available) ------------------------------------------
-
-
-@app.get("/health")
-async def health() -> dict[str, str]:
-    settings = get_settings()
-    return {
-        "status": "ok",
-        "version": "0.1.0",
-        "mode": settings.app_mode.value,
-    }
+app.include_router(health_router)
+app.include_router(providers_router)
+app.include_router(jobs_router)
+app.include_router(exports_router)
+app.include_router(viewer_router)
