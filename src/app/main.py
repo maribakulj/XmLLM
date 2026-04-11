@@ -6,10 +6,13 @@ FastAPI application entry point.
 from __future__ import annotations
 
 from contextlib import asynccontextmanager
+from pathlib import Path
 from typing import AsyncIterator
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 
 from src.app.api import init_services, shutdown_services
 from src.app.api.routes_exports import router as exports_router
@@ -52,3 +55,14 @@ app.include_router(providers_router)
 app.include_router(jobs_router)
 app.include_router(exports_router)
 app.include_router(viewer_router)
+
+# -- Static frontend ----------------------------------------------------------
+
+_FRONTEND_DIR = Path(__file__).resolve().parent.parent.parent / "frontend" / "static"
+
+if _FRONTEND_DIR.exists():
+    app.mount("/static", StaticFiles(directory=str(_FRONTEND_DIR)), name="static")
+
+    @app.get("/")
+    async def serve_frontend() -> FileResponse:
+        return FileResponse(str(_FRONTEND_DIR / "index.html"))

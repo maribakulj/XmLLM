@@ -11,8 +11,9 @@ WORKDIR /app
 COPY pyproject.toml README.md ./
 RUN pip install --no-cache-dir .
 
-# Copy application code
+# Copy application code and frontend
 COPY src/ src/
+COPY frontend/ frontend/
 COPY AGENTS.md ./
 
 # Default storage root — overridden in Space mode via /data
