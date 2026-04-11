@@ -1,0 +1,15 @@
+services:
+  app:
+    build: .
+    ports:
+      - "7860:7860"
+    volumes:
+      - app-data:/app/data
+    environment:
+      - APP_MODE=local
+      - STORAGE_ROOT=/app/data
+      - LOG_LEVEL=info
+    restart: unless-stopped
+
+volumes:
+  app-data:

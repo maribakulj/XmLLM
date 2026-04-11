@@ -12,7 +12,7 @@ Pipeline steps (§23.1):
   9. compute readiness
   10. export ALTO
   11. export PAGE
-  12. build viewer (placeholder)
+  12. build viewer projection
   13. persist
 """
 
@@ -42,6 +42,7 @@ from src.app.serializers.alto_xml import serialize_alto
 from src.app.serializers.page_xml import serialize_page_xml
 from src.app.validators.export_eligibility_validator import compute_export_eligibility
 from src.app.validators.structural_validator import validate_structure
+from src.app.viewer.projection_builder import build_projection
 
 
 def _default_enricher_pipeline() -> EnricherPipeline:
@@ -181,8 +182,11 @@ class JobService:
             else:
                 events.skip(JobStep.EXPORT_PAGE, page_decision.reason)
 
-            # Step 12: build viewer (placeholder — full impl in Sprint 10)
-            events.skip(JobStep.BUILD_VIEWER, "Not yet implemented")
+            # Step 12: build viewer projection
+            with events.step(JobStep.BUILD_VIEWER):
+                vp = build_projection(canonical, export_status=eligibility)
+                self._store.save_viewer(job.job_id, vp.model_dump(mode="json"))
+                job = job.model_copy(update={"has_viewer": True})
 
             # Step 13: persist final state
             with events.step(JobStep.PERSIST):
