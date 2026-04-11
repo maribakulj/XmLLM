@@ -78,7 +78,9 @@ def strict_policy() -> DocumentPolicy:
     """A strict policy: no inference, no partial exports."""
     return DocumentPolicy(
         mode=PolicyMode.STRICT,
+        allow_polygon_to_bbox=False,
         allow_bbox_inference=False,
+        allow_lang_propagation=False,
         allow_partial_alto=False,
         allow_partial_page=False,
         allow_reading_order_inference=False,
