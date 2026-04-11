@@ -1,0 +1,5 @@
+[
+  {"text": "Bonjour le monde", "bbox": [100, 200, 600, 240], "confidence": 0.95},
+  {"text": "Ceci est une ligne", "bbox": [100, 260, 550, 300], "confidence": 0.92},
+  {"text": "Troisième ligne ici", "bbox": [100, 320, 520, 360], "confidence": 0.88}
+]
