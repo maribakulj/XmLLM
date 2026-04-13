@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import pytest
-
 from src.app.geometry import transforms
 
 
@@ -95,6 +94,45 @@ class TestRotateBbox90:
         b = (10, 20, 30, 40)
         result = transforms.rotate_bbox_90(b, 100, 200, times=0)
         assert result == b
+
+
+class TestRescalePoint:
+    def test_upscale(self) -> None:
+        assert transforms.rescale_point((10, 20), 2.0) == (20, 40)
+
+    def test_zero_rejected(self) -> None:
+        with pytest.raises(ValueError, match="must be > 0"):
+            transforms.rescale_point((10, 20), 0)
+
+
+class TestRotatePoint90:
+    def test_once(self) -> None:
+        # Page 100x200, point (10, 20) → (200 - 20, 10) = (180, 10)
+        assert transforms.rotate_point_90((10, 20), 100, 200, times=1) == (180, 10)
+
+    def test_four_times_identity(self) -> None:
+        p = (10, 20)
+        result = transforms.rotate_point_90(p, 100, 200, times=4)
+        assert result == pytest.approx(p)
+
+    def test_zero_times_identity(self) -> None:
+        p = (10, 20)
+        assert transforms.rotate_point_90(p, 100, 200, times=0) == p
+
+
+class TestRotatePolygon90:
+    def test_rotates_all_points(self) -> None:
+        poly = [(0, 0), (10, 0), (10, 10), (0, 10)]
+        result = transforms.rotate_polygon_90(poly, 100, 200, times=1)
+        assert len(result) == 4
+        # Check first point: (0,0) → (200-0, 0) = (200, 0)
+        assert result[0] == (200, 0)
+
+    def test_four_times_identity(self) -> None:
+        poly = [(10, 20), (30, 20), (30, 40), (10, 40)]
+        result = transforms.rotate_polygon_90(poly, 100, 200, times=4)
+        for orig, rotated in zip(poly, result, strict=True):
+            assert rotated == pytest.approx(orig)
 
 
 class TestTranslate:

@@ -17,8 +17,8 @@ from src.app.domain.models.canonical_document import (
     Word,
 )
 from src.app.domain.models.geometry import (
-    BBox,
     Baseline,
+    BBox,
     ClipRect,
     Geometry,
     GeometryContext,

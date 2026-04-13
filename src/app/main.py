@@ -7,7 +7,7 @@ from __future__ import annotations
 
 from contextlib import asynccontextmanager
 from pathlib import Path
-from typing import AsyncIterator
+from typing import TYPE_CHECKING
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -21,6 +21,9 @@ from src.app.api.routes_jobs import router as jobs_router
 from src.app.api.routes_providers import router as providers_router
 from src.app.api.routes_viewer import router as viewer_router
 from src.app.settings import get_settings
+
+if TYPE_CHECKING:
+    from collections.abc import AsyncIterator
 
 
 @asynccontextmanager

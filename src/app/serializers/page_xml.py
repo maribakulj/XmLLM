@@ -26,20 +26,23 @@ Namespace: http://schema.primaresearch.org/PAGE/gts/pagecontent/2019-07-15
 
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
+from typing import TYPE_CHECKING
 
 from lxml import etree
 
-from src.app.domain.models import (
-    CanonicalDocument,
-    Page,
-    TextLine,
-    TextRegion,
-    Word,
-)
 from src.app.domain.models.status import BlockRole
 from src.app.geometry.polygon import bbox_to_polygon
 from src.app.geometry.quantization import RoundingStrategy, quantize_value
+
+if TYPE_CHECKING:
+    from src.app.domain.models import (
+        CanonicalDocument,
+        Page,
+        TextLine,
+        TextRegion,
+        Word,
+    )
 
 PAGE_NS = "http://schema.primaresearch.org/PAGE/gts/pagecontent/2019-07-15"
 XSI_NS = "http://www.w3.org/2001/XMLSchema-instance"
@@ -119,9 +122,9 @@ def _build_page_tree(
     creator = etree.SubElement(metadata, f"{{{PAGE_NS}}}Creator")
     creator.text = "XmLLM"
     created = etree.SubElement(metadata, f"{{{PAGE_NS}}}Created")
-    created.text = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%S")
+    created.text = datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%S")
     last_change = etree.SubElement(metadata, f"{{{PAGE_NS}}}LastChange")
-    last_change.text = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%S")
+    last_change.text = datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%S")
 
     # One <Page> per canonical page (PAGE XML is per-page, but we handle multi-page)
     for page in doc.pages:
@@ -226,10 +229,7 @@ def _add_coords(
     """
     coords = etree.SubElement(parent, f"{{{PAGE_NS}}}Coords")
 
-    if polygon and len(polygon) >= 3:
-        points = polygon
-    else:
-        points = bbox_to_polygon(bbox)
+    points = polygon if polygon and len(polygon) >= 3 else bbox_to_polygon(bbox)
 
     points_str = " ".join(
         f"{quantize_value(x, rounding)},{quantize_value(y, rounding)}"

@@ -11,7 +11,7 @@ Every node carries geometry + provenance.  No exceptions.
 
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import Any
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
@@ -32,7 +32,6 @@ from src.app.domain.models.status import (
     ReadinessLevel,
     Unit,
 )
-
 
 # -- Source ------------------------------------------------------------------
 
@@ -238,7 +237,7 @@ class CanonicalDocument(BaseModel):
     schema_version: str = Field(default="1.0.0", pattern=r"^\d+\.\d+\.\d+$")
     document_id: str = Field(min_length=1)
     source: Source
-    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    created_at: datetime = Field(default_factory=lambda: datetime.now(UTC))
 
     pages: list[Page] = Field(min_length=1)
 

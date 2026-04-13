@@ -8,7 +8,7 @@ from src.app.jobs.events import EventLog, JobStep
 class TestEventLog:
     def test_step_context_manager(self) -> None:
         log = EventLog()
-        with log.step(JobStep.NORMALIZE) as event:
+        with log.step(JobStep.NORMALIZE):
             pass  # simulate work
         assert len(log.events) == 1
         assert log.events[0].step == JobStep.NORMALIZE

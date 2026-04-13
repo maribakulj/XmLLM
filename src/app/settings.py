@@ -7,14 +7,15 @@ via the SPACE_ID environment variable.
 from __future__ import annotations
 
 import os
-from enum import Enum
+from enum import StrEnum
+from functools import lru_cache
 from pathlib import Path
 
 from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
-class AppMode(str, Enum):
+class AppMode(StrEnum):
     LOCAL = "local"
     SPACE = "space"
 
@@ -111,9 +112,6 @@ class Settings(BaseSettings):
             if self.hf_home is None:
                 object.__setattr__(self, "hf_home", Path("/data/.huggingface"))
                 os.environ.setdefault("HF_HOME", str(self.hf_home))
-
-
-from functools import lru_cache
 
 
 @lru_cache(maxsize=1)

@@ -28,7 +28,10 @@ async def get_canonical(job_id: str) -> dict[str, Any]:
     store = get_file_store()
     data = store.load_canonical(job_id)
     if data is None:
-        raise HTTPException(status_code=404, detail=f"Canonical document not found for job '{job_id}'")
+        raise HTTPException(
+            status_code=404,
+            detail=f"Canonical document not found for job '{job_id}'",
+        )
     return data
 
 

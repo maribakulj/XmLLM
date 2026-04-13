@@ -3,10 +3,9 @@
 from __future__ import annotations
 
 import json
-from pathlib import Path
+from typing import TYPE_CHECKING
 
 import pytest
-
 from src.app.domain.models import (
     AltoReadiness,
     CanonicalDocument,
@@ -19,8 +18,8 @@ from src.app.domain.models import (
     Page,
     PageXmlReadiness,
     Provenance,
-    ReadinessLevel,
     RawProviderPayload,
+    ReadinessLevel,
     Source,
     TextLine,
     TextRegion,
@@ -30,13 +29,15 @@ from src.app.domain.models.geometry import GeometryContext
 from src.app.domain.models.status import BlockRole, InputType, NonTextKind
 from src.app.normalization.pipeline import normalize
 from src.app.viewer.overlays import (
-    line_to_inspection,
     line_to_overlay,
     region_to_overlay,
     word_to_inspection,
     word_to_overlay,
 )
 from src.app.viewer.projection_builder import build_all_projections, build_projection
+
+if TYPE_CHECKING:
+    from pathlib import Path
 
 
 def _prov() -> Provenance:

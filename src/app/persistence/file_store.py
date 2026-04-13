@@ -59,7 +59,8 @@ class FileStore:
     def save_json(self, job_id: str, filename: str, data: Any) -> Path:
         """Save a JSON-serializable object."""
         dest = self.job_dir(job_id) / filename
-        dest.write_text(json.dumps(data, ensure_ascii=False, indent=2, default=str), encoding="utf-8")
+        content = json.dumps(data, ensure_ascii=False, indent=2, default=str)
+        dest.write_text(content, encoding="utf-8")
         return dest
 
     def save_bytes(self, job_id: str, filename: str, data: bytes) -> Path:
@@ -128,7 +129,8 @@ class FileStore:
         if not d.exists():
             return None
         for f in d.iterdir():
-            if f.stem == "input" and f.suffix in (".png", ".jpg", ".jpeg", ".tif", ".tiff", ".webp"):
+            valid = (".png", ".jpg", ".jpeg", ".tif", ".tiff", ".webp")
+            if f.stem == "input" and f.suffix in valid:
                 return f
         return None
 
@@ -136,7 +138,8 @@ class FileStore:
 
     def save_provider(self, provider_id: str, data: dict) -> Path:
         dest = self._providers_dir / f"{self._sanitize_id(provider_id)}.json"
-        dest.write_text(json.dumps(data, ensure_ascii=False, indent=2, default=str), encoding="utf-8")
+        content = json.dumps(data, ensure_ascii=False, indent=2, default=str)
+        dest.write_text(content, encoding="utf-8")
         return dest
 
     def load_provider(self, provider_id: str) -> dict | None:

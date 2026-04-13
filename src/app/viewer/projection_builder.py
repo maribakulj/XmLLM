@@ -7,7 +7,8 @@ document after validation and enrichment.
 
 from __future__ import annotations
 
-from src.app.domain.models import CanonicalDocument, Page
+from typing import TYPE_CHECKING
+
 from src.app.domain.models.readiness import ExportEligibility
 from src.app.domain.models.viewer_projection import InspectionData, OverlayItem, ViewerProjection
 from src.app.viewer.overlays import (
@@ -19,6 +20,9 @@ from src.app.viewer.overlays import (
     word_to_inspection,
     word_to_overlay,
 )
+
+if TYPE_CHECKING:
+    from src.app.domain.models import CanonicalDocument
 
 
 def build_projection(
@@ -38,7 +42,10 @@ def build_projection(
         A ViewerProjection ready for the front-end.
     """
     if page_index >= len(doc.pages):
-        raise ValueError(f"Page index {page_index} out of range (document has {len(doc.pages)} pages)")
+        raise ValueError(
+            f"Page index {page_index} out of range"
+            f" (document has {len(doc.pages)} pages)"
+        )
 
     page = doc.pages[page_index]
 

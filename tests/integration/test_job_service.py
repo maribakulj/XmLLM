@@ -3,13 +3,16 @@
 from __future__ import annotations
 
 import json
-from pathlib import Path
+from typing import TYPE_CHECKING
 
 from src.app.domain.models import RawProviderPayload
 from src.app.jobs.models import JobStatus
 from src.app.jobs.service import JobService
 from src.app.persistence.db import Database
 from src.app.persistence.file_store import FileStore
+
+if TYPE_CHECKING:
+    from pathlib import Path
 
 
 class TestJobService:

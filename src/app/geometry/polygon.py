@@ -5,8 +5,10 @@ Polygons are represented as list[tuple[float, float]] — ordered (x, y) vertice
 
 from __future__ import annotations
 
-from src.app.geometry.bbox import BBoxTuple
+from typing import TYPE_CHECKING
 
+if TYPE_CHECKING:
+    from src.app.geometry.bbox import BBoxTuple
 
 PolygonPoints = list[tuple[float, float]]
 

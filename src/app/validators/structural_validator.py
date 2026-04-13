@@ -9,9 +9,13 @@ Checks:
 
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
 from src.app.domain.errors import Severity, ValidationEntry, ValidationReport
-from src.app.domain.models import CanonicalDocument
 from src.app.geometry.bbox import contains
+
+if TYPE_CHECKING:
+    from src.app.domain.models import CanonicalDocument
 
 VALIDATOR_NAME = "structural"
 
@@ -93,7 +97,10 @@ def _check_bbox_containment(
                     validator=VALIDATOR_NAME,
                     severity=Severity.WARNING,
                     path=rpath,
-                    message=f"Region bbox {region.geometry.bbox} exceeds page bounds ({page.width}x{page.height}) beyond tolerance {tolerance}px",
+                    message=(
+                        f"Region bbox {region.geometry.bbox} exceeds page bounds"
+                        f" ({page.width}x{page.height}) beyond tolerance {tolerance}px"
+                    ),
                     code="region_exceeds_page",
                 ))
 

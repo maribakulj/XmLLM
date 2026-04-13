@@ -8,9 +8,13 @@ The pipeline:
 
 from __future__ import annotations
 
-from src.app.domain.models import CanonicalDocument, RawProviderPayload
-from src.app.domain.models.geometry import GeometryContext
+from typing import TYPE_CHECKING
+
 from src.app.providers.registry import get_adapter
+
+if TYPE_CHECKING:
+    from src.app.domain.models import CanonicalDocument, RawProviderPayload
+    from src.app.domain.models.geometry import GeometryContext
 
 
 def normalize(

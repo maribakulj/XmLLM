@@ -19,16 +19,20 @@ will show text without positioned overlays.
 
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
 from src.app.domain.models import (
     CanonicalDocument,
     Geometry,
     Provenance,
     RawProviderPayload,
 )
-from src.app.domain.models.geometry import GeometryContext
 from src.app.domain.models.status import EvidenceType, GeometryStatus, InputType
 from src.app.normalization.canonical_builder import CanonicalBuilder
 from src.app.providers.adapters.base import BaseAdapter
+
+if TYPE_CHECKING:
+    from src.app.domain.models.geometry import GeometryContext
 
 
 class TextOnlyAdapter(BaseAdapter):
@@ -76,7 +80,11 @@ class TextOnlyAdapter(BaseAdapter):
         # Extract text blocks
         blocks = payload.get("blocks")
         if blocks and isinstance(blocks, list):
-            texts = [str(b.get("text", "")) for b in blocks if isinstance(b, dict) and b.get("text")]
+            texts = [
+                str(b.get("text", ""))
+                for b in blocks
+                if isinstance(b, dict) and b.get("text")
+            ]
         else:
             # Single text blob — split into paragraphs
             full_text = str(payload.get("text", ""))
@@ -102,7 +110,7 @@ class TextOnlyAdapter(BaseAdapter):
             )
 
             # Split block into lines
-            lines = [l.strip() for l in block_text.split("\n") if l.strip()]
+            lines = [ln.strip() for ln in block_text.split("\n") if ln.strip()]
             if not lines:
                 lines = [block_text]
 

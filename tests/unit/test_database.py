@@ -2,10 +2,13 @@
 
 from __future__ import annotations
 
-from pathlib import Path
+from typing import TYPE_CHECKING
 
 from src.app.jobs.models import Job, JobStatus
 from src.app.persistence.db import Database
+
+if TYPE_CHECKING:
+    from pathlib import Path
 
 
 class TestDatabase:

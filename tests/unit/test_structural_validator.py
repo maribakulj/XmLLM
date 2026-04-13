@@ -18,7 +18,7 @@ from src.app.domain.models import (
     TextRegion,
     Word,
 )
-from src.app.domain.models.status import BlockRole, InputType, NonTextKind
+from src.app.domain.models.status import InputType, NonTextKind
 from src.app.validators.structural_validator import validate_structure
 
 

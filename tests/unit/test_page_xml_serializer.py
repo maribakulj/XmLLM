@@ -3,14 +3,12 @@
 from __future__ import annotations
 
 from lxml import etree
-
 from src.app.domain.models import (
     AltoReadiness,
     CanonicalDocument,
     EvidenceType,
     Geometry,
     GeometryStatus,
-    Hyphenation,
     Page,
     PageXmlReadiness,
     Provenance,
@@ -313,14 +311,29 @@ class TestPageXmlMultipleRegions:
                     TextRegion(
                         id="tb1", role=BlockRole.HEADING,
                         geometry=_geo(0, 0, 2000, 200), provenance=_prov(),
-                        lines=[TextLine(id="tl1", geometry=_geo(0, 0, 2000, 40), provenance=_prov(),
-                            words=[Word(id="w1", text="Title", geometry=_geo(0, 0, 200, 40), provenance=_prov())])],
+                        lines=[TextLine(
+                            id="tl1", geometry=_geo(0, 0, 2000, 40),
+                            provenance=_prov(),
+                            words=[Word(
+                                id="w1", text="Title",
+                                geometry=_geo(0, 0, 200, 40),
+                                provenance=_prov(),
+                            )],
+                        )],
                     ),
                     TextRegion(
                         id="tb2", role=BlockRole.BODY,
-                        geometry=_geo(0, 250, 2000, 2500), provenance=_prov(),
-                        lines=[TextLine(id="tl2", geometry=_geo(0, 250, 2000, 40), provenance=_prov(),
-                            words=[Word(id="w2", text="Body", geometry=_geo(0, 250, 200, 40), provenance=_prov())])],
+                        geometry=_geo(0, 250, 2000, 2500),
+                        provenance=_prov(),
+                        lines=[TextLine(
+                            id="tl2", geometry=_geo(0, 250, 2000, 40),
+                            provenance=_prov(),
+                            words=[Word(
+                                id="w2", text="Body",
+                                geometry=_geo(0, 250, 200, 40),
+                                provenance=_prov(),
+                            )],
+                        )],
                     ),
                 ],
             )],

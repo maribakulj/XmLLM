@@ -4,10 +4,9 @@ from __future__ import annotations
 
 import pytest
 from pydantic import ValidationError
-
 from src.app.domain.models import (
-    BBox,
     Baseline,
+    BBox,
     ClipRect,
     Geometry,
     GeometryContext,

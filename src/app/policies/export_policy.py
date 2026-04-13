@@ -7,10 +7,13 @@ decision for each export format.
 from __future__ import annotations
 
 from dataclasses import dataclass
+from typing import TYPE_CHECKING
 
-from src.app.domain.models.readiness import ExportEligibility
 from src.app.domain.models.status import ReadinessLevel
 from src.app.policies.document_policy import DocumentPolicy
+
+if TYPE_CHECKING:
+    from src.app.domain.models.readiness import ExportEligibility
 
 
 @dataclass(frozen=True)
@@ -36,7 +39,10 @@ def check_alto_export(
         return ExportDecision(
             allowed=False,
             level=level,
-            reason="ALTO export not possible: missing required data (word text/geometry or line geometry)",
+            reason=(
+                "ALTO export not possible: missing required data"
+                " (word text/geometry or line geometry)"
+            ),
         )
 
     if level == ReadinessLevel.PARTIAL and not policy.allow_partial_alto:

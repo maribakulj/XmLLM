@@ -2,12 +2,12 @@
 
 from __future__ import annotations
 
-from enum import Enum
+from enum import StrEnum
 
 from pydantic import BaseModel, ConfigDict, Field
 
 
-class Severity(str, Enum):
+class Severity(StrEnum):
     """Severity level for validation entries."""
 
     ERROR = "error"
@@ -22,7 +22,10 @@ class ValidationEntry(BaseModel):
 
     validator: str = Field(min_length=1)
     severity: Severity
-    path: str = Field(min_length=1, description="Path in the document, e.g. pages[0].text_regions[1].lines[3]")
+    path: str = Field(
+        min_length=1,
+        description="Path in the document, e.g. pages[0].text_regions[1].lines[3]",
+    )
     message: str = Field(min_length=1)
     code: str | None = None
 

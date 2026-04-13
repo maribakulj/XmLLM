@@ -7,7 +7,8 @@ export eligibility validator's job.
 
 from __future__ import annotations
 
-from src.app.domain.models import CanonicalDocument, Page
+from typing import TYPE_CHECKING
+
 from src.app.domain.models.readiness import (
     AltoReadiness,
     DocumentReadiness,
@@ -18,6 +19,9 @@ from src.app.domain.models.status import (
     MissingCapability,
     ReadinessLevel,
 )
+
+if TYPE_CHECKING:
+    from src.app.domain.models import CanonicalDocument, Page
 
 
 def compute_page_alto_readiness(page: Page) -> AltoReadiness:
@@ -38,14 +42,18 @@ def compute_page_alto_readiness(page: Page) -> AltoReadiness:
     has_confidence = True
 
     for region in page.text_regions:
-        if region.geometry.status == GeometryStatus.UNKNOWN:
-            if MissingCapability.BLOCK_GEOMETRY not in missing:
-                missing.append(MissingCapability.BLOCK_GEOMETRY)
+        if (
+            region.geometry.status == GeometryStatus.UNKNOWN
+            and MissingCapability.BLOCK_GEOMETRY not in missing
+        ):
+            missing.append(MissingCapability.BLOCK_GEOMETRY)
         for line in region.lines:
             has_lines = True
-            if line.geometry.status == GeometryStatus.UNKNOWN:
-                if MissingCapability.LINE_GEOMETRY not in missing:
-                    missing.append(MissingCapability.LINE_GEOMETRY)
+            if (
+                line.geometry.status == GeometryStatus.UNKNOWN
+                and MissingCapability.LINE_GEOMETRY not in missing
+            ):
+                missing.append(MissingCapability.LINE_GEOMETRY)
             for word in line.words:
                 has_words = True
                 if word.geometry.status == GeometryStatus.UNKNOWN:
@@ -61,17 +69,14 @@ def compute_page_alto_readiness(page: Page) -> AltoReadiness:
         if not has_lines:
             missing.append(MissingCapability.LINE_GEOMETRY)
 
-    if not has_word_geo:
-        if MissingCapability.WORD_GEOMETRY not in missing:
-            missing.append(MissingCapability.WORD_GEOMETRY)
+    if not has_word_geo and MissingCapability.WORD_GEOMETRY not in missing:
+        missing.append(MissingCapability.WORD_GEOMETRY)
 
-    if not has_word_text:
-        if MissingCapability.WORD_TEXT not in missing:
-            missing.append(MissingCapability.WORD_TEXT)
+    if not has_word_text and MissingCapability.WORD_TEXT not in missing:
+        missing.append(MissingCapability.WORD_TEXT)
 
-    if not has_confidence:
-        if MissingCapability.CONFIDENCE not in missing:
-            missing.append(MissingCapability.CONFIDENCE)
+    if not has_confidence and MissingCapability.CONFIDENCE not in missing:
+        missing.append(MissingCapability.CONFIDENCE)
 
     if not page.reading_order:
         missing.append(MissingCapability.READING_ORDER)
@@ -101,21 +106,24 @@ def compute_page_pagexml_readiness(page: Page) -> PageXmlReadiness:
     has_lines = False
 
     for region in page.text_regions:
-        if region.geometry.status == GeometryStatus.UNKNOWN:
-            if MissingCapability.BLOCK_GEOMETRY not in missing:
-                missing.append(MissingCapability.BLOCK_GEOMETRY)
+        if (
+            region.geometry.status == GeometryStatus.UNKNOWN
+            and MissingCapability.BLOCK_GEOMETRY not in missing
+        ):
+            missing.append(MissingCapability.BLOCK_GEOMETRY)
         for line in region.lines:
             has_lines = True
-            if line.geometry.status == GeometryStatus.UNKNOWN:
-                if MissingCapability.LINE_GEOMETRY not in missing:
-                    missing.append(MissingCapability.LINE_GEOMETRY)
+            if (
+                line.geometry.status == GeometryStatus.UNKNOWN
+                and MissingCapability.LINE_GEOMETRY not in missing
+            ):
+                missing.append(MissingCapability.LINE_GEOMETRY)
 
     if not has_regions:
         missing.append(MissingCapability.BLOCK_GEOMETRY)
 
-    if not has_lines:
-        if MissingCapability.LINE_GEOMETRY not in missing:
-            missing.append(MissingCapability.LINE_GEOMETRY)
+    if not has_lines and MissingCapability.LINE_GEOMETRY not in missing:
+        missing.append(MissingCapability.LINE_GEOMETRY)
 
     if not page.reading_order:
         missing.append(MissingCapability.READING_ORDER)
@@ -138,11 +146,11 @@ def compute_document_readiness(doc: CanonicalDocument) -> DocumentReadiness:
     if not page_levels:
         return DocumentReadiness(level=ReadinessLevel.NONE)
 
-    if all(l == ReadinessLevel.FULL for l in page_levels):
+    if all(lv == ReadinessLevel.FULL for lv in page_levels):
         overall = ReadinessLevel.FULL
-    elif all(l == ReadinessLevel.NONE for l in page_levels):
+    elif all(lv == ReadinessLevel.NONE for lv in page_levels):
         overall = ReadinessLevel.NONE
-    elif any(l == ReadinessLevel.NONE for l in page_levels):
+    elif any(lv == ReadinessLevel.NONE for lv in page_levels):
         overall = ReadinessLevel.DEGRADED
     else:
         overall = ReadinessLevel.PARTIAL

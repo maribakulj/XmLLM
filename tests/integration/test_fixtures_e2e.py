@@ -7,14 +7,12 @@ the full pipeline: raw → normalize → enrich → validate → ALTO + PAGE + v
 from __future__ import annotations
 
 import json
-from pathlib import Path
+from typing import TYPE_CHECKING
 
-import pytest
 from lxml import etree
-
 from src.app.domain.models import CanonicalDocument, RawProviderPayload
 from src.app.domain.models.geometry import GeometryContext
-from src.app.domain.models.status import GeometryStatus, ReadinessLevel
+from src.app.domain.models.status import GeometryStatus
 from src.app.enrichers import EnricherPipeline
 from src.app.enrichers.bbox_repair_light import BboxRepairLightEnricher
 from src.app.enrichers.hyphenation_basic import HyphenationBasicEnricher
@@ -30,6 +28,8 @@ from src.app.validators.export_eligibility_validator import compute_export_eligi
 from src.app.validators.structural_validator import validate_structure
 from src.app.viewer.projection_builder import build_projection
 
+if TYPE_CHECKING:
+    from pathlib import Path
 
 GEO_CTX = GeometryContext(source_width=1000, source_height=800)
 
@@ -56,7 +56,7 @@ def _run_paddle_pipeline(fixture_name: str, fixtures_dir: Path) -> tuple[
     doc = normalize(raw, "word_box_json", GEO_CTX, document_id=f"test_{fixture_name}")
     doc = ENRICHER_PIPELINE.run(doc, DocumentPolicy())
 
-    struct_report = validate_structure(doc, bbox_tolerance=5.0)
+    validate_structure(doc, bbox_tolerance=5.0)
     eligibility = compute_export_eligibility(doc)
 
     alto_bytes = serialize_alto(doc)
@@ -97,7 +97,7 @@ class TestSimplePage:
 class TestDoubleColumn:
     def test_four_items(self, fixtures_dir: Path) -> None:
         doc, _, _, _ = _run_paddle_pipeline("double_column.json", fixtures_dir)
-        words = [w for r in doc.pages[0].text_regions for l in r.lines for w in l.words]
+        words = [w for r in doc.pages[0].text_regions for ln in r.lines for w in ln.words]
         assert len(words) == 4
 
     def test_reading_order_inferred(self, fixtures_dir: Path) -> None:
@@ -120,15 +120,15 @@ class TestNoisyPage:
         doc, _, _, _ = _run_paddle_pipeline("noisy_page.json", fixtures_dir)
         # bbox_repair_light should clip negative coords
         for r in doc.pages[0].text_regions:
-            for l in r.lines:
-                for w in l.words:
+            for ln in r.lines:
+                for w in ln.words:
                     x, y, _, _ = w.geometry.bbox
                     assert x >= 0
                     assert y >= 0
 
     def test_low_confidence_preserved(self, fixtures_dir: Path) -> None:
         doc, _, _, _ = _run_paddle_pipeline("noisy_page.json", fixtures_dir)
-        words = [w for r in doc.pages[0].text_regions for l in r.lines for w in l.words]
+        words = [w for r in doc.pages[0].text_regions for ln in r.lines for w in ln.words]
         confs = [w.confidence for w in words if w.confidence is not None]
         assert any(c < 0.5 for c in confs)
 
@@ -149,7 +149,7 @@ class TestNoisyPage:
 class TestTitleBody:
     def test_four_items(self, fixtures_dir: Path) -> None:
         doc, _, _, _ = _run_paddle_pipeline("title_body.json", fixtures_dir)
-        words = [w for r in doc.pages[0].text_regions for l in r.lines for w in l.words]
+        words = [w for r in doc.pages[0].text_regions for ln in r.lines for w in ln.words]
         assert len(words) == 4
 
     def test_alto_all_strings(self, fixtures_dir: Path) -> None:
@@ -171,7 +171,7 @@ class TestTitleBody:
 class TestHyphenationFixture:
     def test_hyphenation_detected(self, fixtures_dir: Path) -> None:
         doc, _, _, _ = _run_paddle_pipeline("hyphenation_sample.json", fixtures_dir)
-        words = [w for r in doc.pages[0].text_regions for l in r.lines for w in l.words]
+        words = [w for r in doc.pages[0].text_regions for ln in r.lines for w in ln.words]
         hyph_words = [w for w in words if w.hyphenation is not None and w.hyphenation.is_hyphenated]
         assert len(hyph_words) == 2
         assert hyph_words[0].hyphenation.full_form == "patrimoine"

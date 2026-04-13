@@ -2,14 +2,18 @@
 
 from __future__ import annotations
 
-from src.app.domain.models import (
-    NonTextRegion,
-    TextLine,
-    TextRegion,
-    Word,
-)
+from typing import TYPE_CHECKING
+
 from src.app.domain.models.status import OverlayLevel
 from src.app.domain.models.viewer_projection import InspectionData, OverlayItem
+
+if TYPE_CHECKING:
+    from src.app.domain.models import (
+        NonTextRegion,
+        TextLine,
+        TextRegion,
+        Word,
+    )
 
 
 def word_to_overlay(word: Word) -> OverlayItem:

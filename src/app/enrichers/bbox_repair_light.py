@@ -8,12 +8,16 @@ Light repair only:
 
 from __future__ import annotations
 
-from src.app.domain.models import CanonicalDocument
+from typing import TYPE_CHECKING
+
 from src.app.domain.models.status import GeometryStatus
 from src.app.enrichers import BaseEnricher
 from src.app.geometry.bbox import contains
 from src.app.geometry.transforms import clip_bbox_to_page
-from src.app.policies.document_policy import DocumentPolicy
+
+if TYPE_CHECKING:
+    from src.app.domain.models import CanonicalDocument
+    from src.app.policies.document_policy import DocumentPolicy
 
 
 class BboxRepairLightEnricher(BaseEnricher):

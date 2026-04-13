@@ -31,7 +31,6 @@ class TestSettings:
         assert "image/jpeg" in mimes
 
     def test_space_mode_overrides_storage_root(self, monkeypatch: object) -> None:
-        import pytest
 
         s = Settings(app_mode="space", storage_root=Path("./data"))
         assert s.storage_root == Path("/data")

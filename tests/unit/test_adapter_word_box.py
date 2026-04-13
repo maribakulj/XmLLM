@@ -3,10 +3,9 @@
 from __future__ import annotations
 
 import json
-from pathlib import Path
+from typing import TYPE_CHECKING
 
 import pytest
-
 from src.app.domain.models import (
     EvidenceType,
     GeometryStatus,
@@ -14,6 +13,9 @@ from src.app.domain.models import (
 )
 from src.app.domain.models.geometry import GeometryContext
 from src.app.providers.adapters.word_box_json import WordBoxJsonAdapter
+
+if TYPE_CHECKING:
+    from pathlib import Path
 
 
 @pytest.fixture
@@ -101,8 +103,8 @@ class TestWordBoxJsonAdapter:
         words = [
             w.text
             for r in doc.pages[0].text_regions
-            for l in r.lines
-            for w in l.words
+            for ln in r.lines
+            for w in ln.words
         ]
         assert words[0] == "Bonjour"
         assert words[1] == "le"

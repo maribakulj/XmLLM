@@ -6,9 +6,13 @@ propagated downward. The word's provenance is not changed — only lang is set.
 
 from __future__ import annotations
 
-from src.app.domain.models import CanonicalDocument
+from typing import TYPE_CHECKING
+
 from src.app.enrichers import BaseEnricher
-from src.app.policies.document_policy import DocumentPolicy
+
+if TYPE_CHECKING:
+    from src.app.domain.models import CanonicalDocument
+    from src.app.policies.document_policy import DocumentPolicy
 
 
 class LangPropagationEnricher(BaseEnricher):

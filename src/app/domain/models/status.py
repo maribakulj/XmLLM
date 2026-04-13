@@ -6,13 +6,12 @@ and viewer projection models. They carry no logic — only values.
 
 from __future__ import annotations
 
-from enum import Enum
-
+from enum import StrEnum
 
 # -- Geometry ----------------------------------------------------------------
 
 
-class GeometryStatus(str, Enum):
+class GeometryStatus(StrEnum):
     """How a piece of geometry was obtained."""
 
     EXACT = "exact"
@@ -21,13 +20,13 @@ class GeometryStatus(str, Enum):
     UNKNOWN = "unknown"
 
 
-class CoordinateOrigin(str, Enum):
+class CoordinateOrigin(StrEnum):
     """Origin of the coordinate system.  Always top_left in canonical model."""
 
     TOP_LEFT = "top_left"
 
 
-class Unit(str, Enum):
+class Unit(StrEnum):
     """Measurement unit.  Always px in canonical model."""
 
     PX = "px"
@@ -36,7 +35,7 @@ class Unit(str, Enum):
 # -- Provenance --------------------------------------------------------------
 
 
-class EvidenceType(str, Enum):
+class EvidenceType(StrEnum):
     """How a piece of data was produced."""
 
     PROVIDER_NATIVE = "provider_native"
@@ -48,7 +47,7 @@ class EvidenceType(str, Enum):
 # -- Document structure ------------------------------------------------------
 
 
-class BlockRole(str, Enum):
+class BlockRole(StrEnum):
     """Semantic role of a text block within the page."""
 
     BODY = "body"
@@ -62,7 +61,7 @@ class BlockRole(str, Enum):
     OTHER = "other"
 
 
-class NonTextKind(str, Enum):
+class NonTextKind(StrEnum):
     """Type of non-textual region."""
 
     ILLUSTRATION = "illustration"
@@ -76,7 +75,7 @@ class NonTextKind(str, Enum):
 # -- Source ------------------------------------------------------------------
 
 
-class InputType(str, Enum):
+class InputType(StrEnum):
     """Type of the original input document."""
 
     IMAGE = "image"
@@ -92,7 +91,7 @@ class InputType(str, Enum):
 # -- Readiness ---------------------------------------------------------------
 
 
-class ReadinessLevel(str, Enum):
+class ReadinessLevel(StrEnum):
     """How ready a document / page / element is for export."""
 
     FULL = "full"
@@ -101,7 +100,7 @@ class ReadinessLevel(str, Enum):
     NONE = "none"
 
 
-class MissingCapability(str, Enum):
+class MissingCapability(StrEnum):
     """Specific capabilities that may be missing for export readiness."""
 
     PAGE_DIMENSIONS = "page_dimensions"
@@ -117,7 +116,7 @@ class MissingCapability(str, Enum):
 # -- Overlay (viewer) --------------------------------------------------------
 
 
-class OverlayLevel(str, Enum):
+class OverlayLevel(StrEnum):
     """Granularity level for viewer overlays."""
 
     BLOCK = "block"
