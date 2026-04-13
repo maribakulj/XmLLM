@@ -113,6 +113,10 @@ class Settings(BaseSettings):
                 os.environ.setdefault("HF_HOME", str(self.hf_home))
 
 
+from functools import lru_cache
+
+
+@lru_cache(maxsize=1)
 def get_settings() -> Settings:
-    """Factory for dependency injection (FastAPI Depends)."""
+    """Factory for dependency injection (FastAPI Depends). Cached singleton."""
     return Settings()

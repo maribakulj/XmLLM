@@ -1,3 +1,15 @@
+---
+title: XmLLM
+emoji: "\U0001F4C4"
+colorFrom: blue
+colorTo: purple
+sdk: docker
+app_port: 7860
+pinned: false
+license: apache-2.0
+short_description: "Document structure engine: OCR output to ALTO XML & PAGE XML"
+---
+
 # XmLLM
 
 **Canonical-first document structure engine** that converts OCR/VLM provider outputs into validated **ALTO XML** and **PAGE XML**, via an internal canonical representation.

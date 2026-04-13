@@ -36,8 +36,15 @@ class FileStore:
 
     # -- Job directory --------------------------------------------------------
 
+    @staticmethod
+    def _sanitize_id(value: str) -> str:
+        """Reject path-traversal attempts in identifiers."""
+        if not value or "/" in value or "\\" in value or ".." in value:
+            raise ValueError(f"Invalid identifier (path traversal rejected): {value!r}")
+        return value
+
     def job_dir(self, job_id: str) -> Path:
-        d = self._jobs_dir / job_id
+        d = self._jobs_dir / self._sanitize_id(job_id)
         d.mkdir(parents=True, exist_ok=True)
         return d
 
@@ -83,14 +90,14 @@ class FileStore:
 
     def load_json(self, job_id: str, filename: str) -> Any:
         """Load a JSON file from the job directory. Returns None if not found."""
-        path = self._jobs_dir / job_id / filename
+        path = self._jobs_dir / self._sanitize_id(job_id) / filename
         if not path.exists():
             return None
         return json.loads(path.read_text(encoding="utf-8"))
 
     def load_bytes(self, job_id: str, filename: str) -> bytes | None:
         """Load raw bytes. Returns None if not found."""
-        path = self._jobs_dir / job_id / filename
+        path = self._jobs_dir / self._sanitize_id(job_id) / filename
         if not path.exists():
             return None
         return path.read_bytes()
@@ -128,12 +135,12 @@ class FileStore:
     # -- Provider profiles ----------------------------------------------------
 
     def save_provider(self, provider_id: str, data: dict) -> Path:
-        dest = self._providers_dir / f"{provider_id}.json"
+        dest = self._providers_dir / f"{self._sanitize_id(provider_id)}.json"
         dest.write_text(json.dumps(data, ensure_ascii=False, indent=2, default=str), encoding="utf-8")
         return dest
 
     def load_provider(self, provider_id: str) -> dict | None:
-        path = self._providers_dir / f"{provider_id}.json"
+        path = self._providers_dir / f"{self._sanitize_id(provider_id)}.json"
         if not path.exists():
             return None
         return json.loads(path.read_text(encoding="utf-8"))
@@ -144,7 +151,7 @@ class FileStore:
         return [f.stem for f in self._providers_dir.glob("*.json")]
 
     def delete_provider(self, provider_id: str) -> bool:
-        path = self._providers_dir / f"{provider_id}.json"
+        path = self._providers_dir / f"{self._sanitize_id(provider_id)}.json"
         if path.exists():
             path.unlink()
             return True

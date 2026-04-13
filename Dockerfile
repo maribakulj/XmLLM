@@ -16,6 +16,13 @@ COPY src/ src/
 COPY frontend/ frontend/
 COPY AGENTS.md ./
 
+# HF Spaces requires a non-root user
+RUN useradd -m -u 1000 appuser \
+    && mkdir -p /app/data /data \
+    && chown -R appuser:appuser /app /data
+
+USER appuser
+
 # Default storage root — overridden in Space mode via /data
 ENV STORAGE_ROOT=/app/data
 ENV HOST=0.0.0.0

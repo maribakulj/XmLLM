@@ -52,7 +52,7 @@ class HyphenationBasicEnricher(BaseEnricher):
                 continue
 
             last_word = line_a.words[-1]
-            first_word = line_b.words[-0]
+            first_word = line_b.words[0]
 
             # Skip if already hyphenated
             if last_word.hyphenation is not None:

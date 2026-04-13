@@ -29,12 +29,15 @@ async def create_job(
     """
     svc = get_job_service()
 
-    # Read raw payload
-    content = await raw_payload_file.read()
+    # Read raw payload (limit to 50 MB to prevent DoS)
+    max_size = 52_428_800
+    content = await raw_payload_file.read(max_size + 1)
+    if len(content) > max_size:
+        raise HTTPException(status_code=413, detail="Payload too large (max 50 MB)")
     try:
         payload_data = json.loads(content)
     except json.JSONDecodeError as e:
-        raise HTTPException(status_code=422, detail=f"Invalid JSON payload: {e}")
+        raise HTTPException(status_code=422, detail=f"Invalid JSON payload: {e}") from None
 
     raw = RawProviderPayload(
         provider_id=provider_id,

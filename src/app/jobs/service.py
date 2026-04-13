@@ -193,13 +193,12 @@ class JobService:
                 self._store.save_events(job.job_id, events.to_dicts())
 
             # Determine final status
-            if job.has_alto or job.has_page_xml:
-                if job.has_alto and job.has_page_xml:
-                    final_status = JobStatus.SUCCEEDED
-                else:
-                    final_status = JobStatus.PARTIAL_SUCCESS
-            else:
+            if job.has_alto and job.has_page_xml:
+                final_status = JobStatus.SUCCEEDED
+            elif job.has_alto or job.has_page_xml:
                 final_status = JobStatus.PARTIAL_SUCCESS
+            else:
+                final_status = JobStatus.FAILED
 
             job = job.model_copy(update={
                 "status": final_status,
