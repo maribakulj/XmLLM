@@ -2,28 +2,28 @@
 
 from __future__ import annotations
 
-from datetime import datetime, timezone
-from enum import Enum
+from datetime import UTC, datetime
+from enum import StrEnum
 
 from pydantic import BaseModel, ConfigDict, Field
 
 from src.app.providers.capabilities import CapabilityMatrix
 
 
-class RuntimeType(str, Enum):
+class RuntimeType(StrEnum):
     LOCAL = "local"
     HUB = "hub"
     API = "api"
 
 
-class ProviderFamily(str, Enum):
+class ProviderFamily(StrEnum):
     WORD_BOX_JSON = "word_box_json"
     LINE_BOX_JSON = "line_box_json"
     REGION_LINE_WORD_POLYGON = "region_line_word_polygon"
     TEXT_ONLY = "text_only"
 
 
-class AuthMode(str, Enum):
+class AuthMode(StrEnum):
     NONE = "none"
     API_KEY = "api_key"
     BEARER = "bearer"
@@ -51,5 +51,5 @@ class ProviderProfile(BaseModel):
     prompt_template: str | None = None
 
     last_test_status: str | None = None
-    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
-    updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    created_at: datetime = Field(default_factory=lambda: datetime.now(UTC))
+    updated_at: datetime = Field(default_factory=lambda: datetime.now(UTC))

@@ -13,9 +13,12 @@ Every enricher MUST:
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
+from typing import TYPE_CHECKING
 
-from src.app.domain.models import CanonicalDocument
 from src.app.policies.document_policy import DocumentPolicy
+
+if TYPE_CHECKING:
+    from src.app.domain.models import CanonicalDocument
 
 
 class BaseEnricher(ABC):

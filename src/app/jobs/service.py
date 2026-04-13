@@ -19,10 +19,9 @@ Pipeline steps (§23.1):
 from __future__ import annotations
 
 import uuid
-from datetime import datetime, timezone
-from pathlib import Path
+from datetime import UTC, datetime
+from typing import TYPE_CHECKING
 
-from src.app.domain.models import CanonicalDocument, RawProviderPayload
 from src.app.domain.models.geometry import GeometryContext
 from src.app.enrichers import EnricherPipeline
 from src.app.enrichers.bbox_repair_light import BboxRepairLightEnricher
@@ -34,8 +33,6 @@ from src.app.enrichers.text_consistency import TextConsistencyEnricher
 from src.app.jobs.events import EventLog, JobStep
 from src.app.jobs.models import Job, JobStatus
 from src.app.normalization.pipeline import normalize
-from src.app.persistence.db import Database
-from src.app.persistence.file_store import FileStore
 from src.app.policies.document_policy import DocumentPolicy
 from src.app.policies.export_policy import check_alto_export, check_page_export
 from src.app.serializers.alto_xml import serialize_alto
@@ -43,6 +40,13 @@ from src.app.serializers.page_xml import serialize_page_xml
 from src.app.validators.export_eligibility_validator import compute_export_eligibility
 from src.app.validators.structural_validator import validate_structure
 from src.app.viewer.projection_builder import build_projection
+
+if TYPE_CHECKING:
+    from pathlib import Path
+
+    from src.app.domain.models import CanonicalDocument, RawProviderPayload
+    from src.app.persistence.db import Database
+    from src.app.persistence.file_store import FileStore
 
 
 def _default_enricher_pipeline() -> EnricherPipeline:
@@ -103,7 +107,7 @@ class JobService:
         events = EventLog()
         job = job.model_copy(update={
             "status": JobStatus.RUNNING,
-            "started_at": datetime.now(timezone.utc),
+            "started_at": datetime.now(UTC),
             "image_width": image_width,
             "image_height": image_height,
         })
@@ -193,24 +197,23 @@ class JobService:
                 self._store.save_events(job.job_id, events.to_dicts())
 
             # Determine final status
-            if job.has_alto or job.has_page_xml:
-                if job.has_alto and job.has_page_xml:
-                    final_status = JobStatus.SUCCEEDED
-                else:
-                    final_status = JobStatus.PARTIAL_SUCCESS
-            else:
+            if job.has_alto and job.has_page_xml:
+                final_status = JobStatus.SUCCEEDED
+            elif job.has_alto or job.has_page_xml:
                 final_status = JobStatus.PARTIAL_SUCCESS
+            else:
+                final_status = JobStatus.FAILED
 
             job = job.model_copy(update={
                 "status": final_status,
-                "completed_at": datetime.now(timezone.utc),
+                "completed_at": datetime.now(UTC),
                 "warnings": warnings,
             })
 
         except Exception as exc:
             job = job.model_copy(update={
                 "status": JobStatus.FAILED,
-                "completed_at": datetime.now(timezone.utc),
+                "completed_at": datetime.now(UTC),
                 "error": str(exc),
                 "warnings": warnings,
             })

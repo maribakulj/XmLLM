@@ -7,7 +7,7 @@ It is never used for export or rendering.
 
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import Any
 
 from pydantic import BaseModel, ConfigDict, Field
@@ -26,7 +26,7 @@ class RawProviderPayload(BaseModel):
     payload: dict[str, Any] | list[Any]
     """The raw JSON-serialisable output from the provider."""
 
-    received_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    received_at: datetime = Field(default_factory=lambda: datetime.now(UTC))
 
     image_width: int | None = Field(default=None, gt=0)
     image_height: int | None = Field(default=None, gt=0)

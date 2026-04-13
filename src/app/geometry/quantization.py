@@ -8,12 +8,14 @@ rounding and tolerance for containment checks.
 from __future__ import annotations
 
 import math
-from enum import Enum
+from enum import StrEnum
+from typing import TYPE_CHECKING
 
-from src.app.geometry.bbox import BBoxTuple
+if TYPE_CHECKING:
+    from src.app.geometry.bbox import BBoxTuple
 
 
-class RoundingStrategy(str, Enum):
+class RoundingStrategy(StrEnum):
     """How to round float coordinates to integers."""
 
     ROUND = "round"

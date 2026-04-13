@@ -15,7 +15,7 @@ from src.app.domain.models import (
     TextRegion,
     Word,
 )
-from src.app.domain.models.status import BlockRole, InputType
+from src.app.domain.models.status import InputType
 from src.app.enrichers import EnricherPipeline
 from src.app.enrichers.bbox_repair_light import BboxRepairLightEnricher
 from src.app.enrichers.hyphenation_basic import HyphenationBasicEnricher
@@ -24,7 +24,6 @@ from src.app.enrichers.polygon_to_bbox import PolygonToBboxEnricher
 from src.app.enrichers.reading_order_simple import ReadingOrderSimpleEnricher
 from src.app.enrichers.text_consistency import TextConsistencyEnricher
 from src.app.policies.document_policy import DocumentPolicy, strict_policy
-
 
 # -- Helpers ------------------------------------------------------------------
 

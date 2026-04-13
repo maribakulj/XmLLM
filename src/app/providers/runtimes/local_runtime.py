@@ -2,11 +2,14 @@
 
 from __future__ import annotations
 
-from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
-from src.app.domain.models import RawProviderPayload
 from src.app.providers.runtimes.base import BaseRuntime
+
+if TYPE_CHECKING:
+    from pathlib import Path
+
+    from src.app.domain.models import RawProviderPayload
 
 
 class LocalRuntime(BaseRuntime):

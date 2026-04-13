@@ -7,8 +7,12 @@ always (x, y, width, height) with origin at top_left, unit px.
 
 from __future__ import annotations
 
-from src.app.geometry.bbox import BBoxTuple
+from typing import TYPE_CHECKING
+
 from src.app.geometry.polygon import PolygonPoints, polygon_to_bbox
+
+if TYPE_CHECKING:
+    from src.app.geometry.bbox import BBoxTuple
 
 
 def xyxy_to_xywh(xyxy: tuple[float, float, float, float]) -> BBoxTuple:

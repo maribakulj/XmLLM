@@ -6,9 +6,13 @@ a lowercase word, marks both as hyphenated with the combined full_form.
 
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
 from src.app.domain.models import CanonicalDocument, Hyphenation, TextLine
 from src.app.enrichers import BaseEnricher
-from src.app.policies.document_policy import DocumentPolicy
+
+if TYPE_CHECKING:
+    from src.app.policies.document_policy import DocumentPolicy
 
 
 class HyphenationBasicEnricher(BaseEnricher):
@@ -52,7 +56,7 @@ class HyphenationBasicEnricher(BaseEnricher):
                 continue
 
             last_word = line_a.words[-1]
-            first_word = line_b.words[-0]
+            first_word = line_b.words[0]
 
             # Skip if already hyphenated
             if last_word.hyphenation is not None:

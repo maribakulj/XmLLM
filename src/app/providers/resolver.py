@@ -2,16 +2,25 @@
 
 from __future__ import annotations
 
-from src.app.providers.adapters.base import BaseAdapter
-from src.app.providers.profiles import ProviderProfile
+from typing import TYPE_CHECKING
+
 from src.app.providers.registry import get_adapter, get_runtime
-from src.app.providers.runtimes.base import BaseRuntime
+
+if TYPE_CHECKING:
+    from src.app.providers.adapters.base import BaseAdapter
+    from src.app.providers.profiles import ProviderProfile
+    from src.app.providers.runtimes.base import BaseRuntime
 
 
 class ResolvedProvider:
     """A fully resolved provider: runtime + adapter, ready to execute."""
 
-    def __init__(self, profile: ProviderProfile, runtime: BaseRuntime, adapter: BaseAdapter) -> None:
+    def __init__(
+        self,
+        profile: ProviderProfile,
+        runtime: BaseRuntime,
+        adapter: BaseAdapter,
+    ) -> None:
         self.profile = profile
         self.runtime = runtime
         self.adapter = adapter

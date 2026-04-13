@@ -5,7 +5,6 @@ A baseline is defined by a sequence of points, typically from left to right.
 
 from __future__ import annotations
 
-
 BaselinePoints = list[tuple[float, float]]
 
 

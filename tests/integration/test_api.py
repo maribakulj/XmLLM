@@ -6,13 +6,14 @@ Tests the full API surface: providers, jobs, exports, viewer.
 from __future__ import annotations
 
 import io
-import json
-from pathlib import Path
+from typing import TYPE_CHECKING
 
 import pytest
 from fastapi.testclient import TestClient
-
 from src.app.main import app
+
+if TYPE_CHECKING:
+    from pathlib import Path
 
 
 @pytest.fixture
@@ -21,7 +22,11 @@ def client(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> TestClient:
     monkeypatch.setenv("STORAGE_ROOT", str(tmp_path / "data"))
     # Force re-creation of settings
     from src.app import settings as settings_mod
-    monkeypatch.setattr(settings_mod, "get_settings", lambda: settings_mod.Settings(storage_root=tmp_path / "data"))
+    monkeypatch.setattr(
+        settings_mod,
+        "get_settings",
+        lambda: settings_mod.Settings(storage_root=tmp_path / "data"),
+    )
     with TestClient(app) as c:
         yield c
 
@@ -122,7 +127,13 @@ class TestJobs:
                 "image_width": 2480,
                 "image_height": 3508,
             },
-            files={"raw_payload_file": ("payload.json", io.BytesIO(payload_bytes), "application/json")},
+            files={
+                "raw_payload_file": (
+                    "payload.json",
+                    io.BytesIO(payload_bytes),
+                    "application/json",
+                ),
+            },
         )
         assert r.status_code == 201
         return r.json()
@@ -249,7 +260,13 @@ class TestViewer:
                 "image_width": 2480,
                 "image_height": 3508,
             },
-            files={"raw_payload_file": ("p.json", io.BytesIO(paddle_payload_bytes), "application/json")},
+            files={
+                "raw_payload_file": (
+                    "p.json",
+                    io.BytesIO(paddle_payload_bytes),
+                    "application/json",
+                ),
+            },
         )
         job_id = r.json()["job_id"]
 

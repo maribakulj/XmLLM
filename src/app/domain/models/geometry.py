@@ -15,7 +15,6 @@ from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 from src.app.domain.models.status import CoordinateOrigin, GeometryStatus, Unit
 
-
 # -- Primitives --------------------------------------------------------------
 
 

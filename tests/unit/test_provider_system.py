@@ -3,15 +3,13 @@
 from __future__ import annotations
 
 import json
-from pathlib import Path
+from typing import TYPE_CHECKING
 
 import pytest
-
 from src.app.domain.models import GeometryStatus, RawProviderPayload
 from src.app.domain.models.geometry import GeometryContext
 from src.app.providers.adapters.line_box_json import LineBoxJsonAdapter
 from src.app.providers.adapters.text_only import TextOnlyAdapter
-from src.app.providers.capabilities import CapabilityMatrix
 from src.app.providers.profiles import ProviderFamily, ProviderProfile, RuntimeType
 from src.app.providers.registry import (
     get_adapter,
@@ -20,6 +18,9 @@ from src.app.providers.registry import (
     list_runtime_types,
 )
 from src.app.providers.resolver import resolve_provider
+
+if TYPE_CHECKING:
+    from pathlib import Path
 
 
 @pytest.fixture
@@ -234,6 +235,29 @@ class TestRegistry:
     def test_get_runtime_api(self) -> None:
         rt = get_runtime("api")
         assert rt.is_available()
+
+    def test_get_runtime_hub(self) -> None:
+        rt = get_runtime("hub")
+        # is_available depends on whether huggingface_hub is installed
+        assert isinstance(rt.is_available(), bool)
+
+    def test_hub_runtime_execute_raises(self) -> None:
+        rt = get_runtime("hub")
+        with pytest.raises(NotImplementedError, match="not yet implemented"):
+            from pathlib import Path
+            rt.execute(Path("/fake.png"), "model_id")
+
+    def test_local_runtime_execute_raises(self) -> None:
+        rt = get_runtime("local")
+        with pytest.raises(NotImplementedError, match="not yet implemented"):
+            from pathlib import Path
+            rt.execute(Path("/fake.png"), "model_id")
+
+    def test_api_runtime_execute_raises(self) -> None:
+        rt = get_runtime("api")
+        with pytest.raises(NotImplementedError, match="not yet implemented"):
+            from pathlib import Path
+            rt.execute(Path("/fake.png"), "model_id")
 
     def test_get_runtime_unknown(self) -> None:
         with pytest.raises(KeyError, match="No runtime"):

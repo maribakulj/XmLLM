@@ -29,10 +29,14 @@ Coordinate mapping:
 
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
 from lxml import etree
 
-from src.app.domain.models import CanonicalDocument, Page, TextLine, TextRegion, Word
 from src.app.geometry.quantization import RoundingStrategy, quantize_bbox
+
+if TYPE_CHECKING:
+    from src.app.domain.models import CanonicalDocument, Page, TextLine, TextRegion, Word
 
 ALTO_NS = "http://www.loc.gov/standards/alto/ns-v4#"
 XSI_NS = "http://www.w3.org/2001/XMLSchema-instance"

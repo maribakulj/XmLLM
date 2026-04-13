@@ -7,12 +7,12 @@ that controls what the system may or may not do.
 
 from __future__ import annotations
 
-from enum import Enum
+from enum import StrEnum
 
 from pydantic import BaseModel, ConfigDict
 
 
-class PolicyMode(str, Enum):
+class PolicyMode(StrEnum):
     """Named policy presets."""
 
     STRICT = "strict"

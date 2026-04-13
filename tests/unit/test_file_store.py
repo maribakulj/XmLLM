@@ -2,9 +2,12 @@
 
 from __future__ import annotations
 
-from pathlib import Path
+from typing import TYPE_CHECKING
 
 from src.app.persistence.file_store import FileStore
+
+if TYPE_CHECKING:
+    from pathlib import Path
 
 
 class TestFileStore:

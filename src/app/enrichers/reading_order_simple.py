@@ -6,10 +6,14 @@ left-to-right using the center of each region's bbox.
 
 from __future__ import annotations
 
-from src.app.domain.models import CanonicalDocument
+from typing import TYPE_CHECKING
+
 from src.app.enrichers import BaseEnricher
 from src.app.geometry.bbox import center
-from src.app.policies.document_policy import DocumentPolicy
+
+if TYPE_CHECKING:
+    from src.app.domain.models import CanonicalDocument
+    from src.app.policies.document_policy import DocumentPolicy
 
 
 class ReadingOrderSimpleEnricher(BaseEnricher):

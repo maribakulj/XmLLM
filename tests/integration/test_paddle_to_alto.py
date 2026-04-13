@@ -6,14 +6,16 @@ This is the Sprint 3 vertical slice end-to-end test.
 from __future__ import annotations
 
 import json
-from pathlib import Path
+from typing import TYPE_CHECKING
 
 from lxml import etree
-
 from src.app.domain.models import RawProviderPayload
 from src.app.domain.models.geometry import GeometryContext
 from src.app.normalization.pipeline import normalize
 from src.app.serializers.alto_xml import ALTO_NS, serialize_alto
+
+if TYPE_CHECKING:
+    from pathlib import Path
 
 
 class TestPaddleToAlto:
@@ -58,8 +60,8 @@ class TestPaddleToAlto:
         all_words = [
             w
             for r in page.text_regions
-            for l in r.lines
-            for w in l.words
+            for ln in r.lines
+            for w in ln.words
         ]
         assert len(all_words) == 5
 
@@ -135,10 +137,10 @@ class TestPaddleToAlto:
         assert doc2.document_id == doc.document_id
         assert len(doc2.pages) == 1
         words_original = [
-            w.text for r in doc.pages[0].text_regions for l in r.lines for w in l.words
+            w.text for r in doc.pages[0].text_regions for ln in r.lines for w in ln.words
         ]
         words_restored = [
-            w.text for r in doc2.pages[0].text_regions for l in r.lines for w in l.words
+            w.text for r in doc2.pages[0].text_regions for ln in r.lines for w in ln.words
         ]
         assert words_original == words_restored
 

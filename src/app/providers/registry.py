@@ -2,15 +2,19 @@
 
 from __future__ import annotations
 
-from src.app.providers.adapters.base import BaseAdapter
+from typing import TYPE_CHECKING
+
 from src.app.providers.adapters.line_box_json import LineBoxJsonAdapter
 from src.app.providers.adapters.text_only import TextOnlyAdapter
 from src.app.providers.adapters.word_box_json import WordBoxJsonAdapter
 from src.app.providers.profiles import ProviderFamily, RuntimeType
 from src.app.providers.runtimes.api_runtime import ApiRuntime
-from src.app.providers.runtimes.base import BaseRuntime
 from src.app.providers.runtimes.hub_runtime import HubRuntime
 from src.app.providers.runtimes.local_runtime import LocalRuntime
+
+if TYPE_CHECKING:
+    from src.app.providers.adapters.base import BaseAdapter
+    from src.app.providers.runtimes.base import BaseRuntime
 
 # -- Adapter registry ---------------------------------------------------------
 

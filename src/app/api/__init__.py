@@ -6,10 +6,14 @@ JobService, scoped to the application lifespan.
 
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
 from src.app.jobs.service import JobService
 from src.app.persistence.db import Database
 from src.app.persistence.file_store import FileStore
-from src.app.settings import Settings
+
+if TYPE_CHECKING:
+    from src.app.settings import Settings
 
 # Module-level singletons, initialized during lifespan startup.
 _db: Database | None = None

@@ -6,11 +6,15 @@ axis-aligned bounding box and marks the geometry as 'inferred'.
 
 from __future__ import annotations
 
-from src.app.domain.models import CanonicalDocument, Geometry, Provenance
-from src.app.domain.models.status import EvidenceType, GeometryStatus
+from typing import TYPE_CHECKING
+
+from src.app.domain.models.status import GeometryStatus
 from src.app.enrichers import BaseEnricher
 from src.app.geometry.polygon import polygon_to_bbox as _poly_to_bbox
-from src.app.policies.document_policy import DocumentPolicy
+
+if TYPE_CHECKING:
+    from src.app.domain.models import CanonicalDocument
+    from src.app.policies.document_policy import DocumentPolicy
 
 
 class PolygonToBboxEnricher(BaseEnricher):

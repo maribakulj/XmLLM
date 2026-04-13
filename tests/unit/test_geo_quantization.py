@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import pytest
-
 from src.app.geometry.quantization import (
     RoundingStrategy,
     bbox_contains_with_tolerance,

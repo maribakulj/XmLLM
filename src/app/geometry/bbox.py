@@ -6,7 +6,6 @@ x = left edge, y = top edge, width > 0, height > 0.
 
 from __future__ import annotations
 
-
 # Type alias for the canonical bbox tuple
 BBoxTuple = tuple[float, float, float, float]
 

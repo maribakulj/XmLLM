@@ -7,10 +7,9 @@ ALTO XML and PAGE XML, and that both outputs are structurally correct.
 from __future__ import annotations
 
 import json
-from pathlib import Path
+from typing import TYPE_CHECKING
 
 from lxml import etree
-
 from src.app.domain.models import RawProviderPayload
 from src.app.domain.models.geometry import GeometryContext
 from src.app.normalization.pipeline import normalize
@@ -19,6 +18,9 @@ from src.app.policies.export_policy import check_alto_export, check_page_export
 from src.app.serializers.alto_xml import ALTO_NS, serialize_alto
 from src.app.serializers.page_xml import PAGE_NS, serialize_page_xml
 from src.app.validators.export_eligibility_validator import compute_export_eligibility
+
+if TYPE_CHECKING:
+    from pathlib import Path
 
 
 class TestDualExport:

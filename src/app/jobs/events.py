@@ -4,14 +4,17 @@ from __future__ import annotations
 
 import time
 from contextlib import contextmanager
-from datetime import datetime, timezone
-from enum import Enum
-from typing import Generator
+from datetime import UTC, datetime
+from enum import StrEnum
+from typing import TYPE_CHECKING
 
 from pydantic import BaseModel, Field
 
+if TYPE_CHECKING:
+    from collections.abc import Generator
 
-class JobStep(str, Enum):
+
+class JobStep(StrEnum):
     """Named steps in the processing pipeline."""
 
     RECEIVE_FILE = "receive_file"
@@ -34,7 +37,7 @@ class JobEvent(BaseModel):
 
     step: JobStep
     status: str = "started"  # started, completed, failed, skipped
-    started_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    started_at: datetime = Field(default_factory=lambda: datetime.now(UTC))
     completed_at: datetime | None = None
     duration_ms: float | None = None
     message: str | None = None
@@ -67,7 +70,7 @@ class EventLog:
             idx = len(self._events) - 1
             self._events[idx] = event.model_copy(update={
                 "status": "completed",
-                "completed_at": datetime.now(timezone.utc),
+                "completed_at": datetime.now(UTC),
                 "duration_ms": elapsed,
             })
         except Exception as exc:
@@ -75,7 +78,7 @@ class EventLog:
             idx = len(self._events) - 1
             self._events[idx] = event.model_copy(update={
                 "status": "failed",
-                "completed_at": datetime.now(timezone.utc),
+                "completed_at": datetime.now(UTC),
                 "duration_ms": elapsed,
                 "error": str(exc),
             })
@@ -86,7 +89,7 @@ class EventLog:
         self._events.append(JobEvent(
             step=step,
             status="skipped",
-            completed_at=datetime.now(timezone.utc),
+            completed_at=datetime.now(UTC),
             message=reason,
         ))
 

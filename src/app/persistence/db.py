@@ -8,10 +8,13 @@ from __future__ import annotations
 
 import json
 import sqlite3
-from pathlib import Path
-from typing import Any
+from datetime import UTC
+from typing import TYPE_CHECKING, Any
 
 from src.app.jobs.models import Job, JobStatus
+
+if TYPE_CHECKING:
+    from pathlib import Path
 
 _SCHEMA = """
 CREATE TABLE IF NOT EXISTS jobs (
@@ -146,12 +149,16 @@ class Database:
     # -- Providers ------------------------------------------------------------
 
     def save_provider_record(self, provider_id: str, data: dict) -> None:
-        from datetime import datetime, timezone
+        from datetime import datetime
 
-        now = datetime.now(timezone.utc).isoformat()
+        now = datetime.now(UTC).isoformat()
         self.conn.execute(
-            """INSERT OR REPLACE INTO providers (provider_id, data, created_at, updated_at)
-               VALUES (?, ?, COALESCE((SELECT created_at FROM providers WHERE provider_id = ?), ?), ?)""",
+            """INSERT OR REPLACE INTO providers
+               (provider_id, data, created_at, updated_at)
+               VALUES (?, ?, COALESCE(
+                   (SELECT created_at FROM providers WHERE provider_id = ?),
+                   ?
+               ), ?)""",
             (provider_id, json.dumps(data, default=str), provider_id, now, now),
         )
         self.conn.commit()

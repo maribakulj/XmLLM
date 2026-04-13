@@ -6,7 +6,8 @@ an ExportEligibility decision for the whole document.
 
 from __future__ import annotations
 
-from src.app.domain.models import CanonicalDocument
+from typing import TYPE_CHECKING
+
 from src.app.domain.models.readiness import ExportEligibility
 from src.app.domain.models.status import ReadinessLevel
 from src.app.policies.document_policy import DocumentPolicy
@@ -14,6 +15,9 @@ from src.app.validators.readiness_validator import (
     compute_page_alto_readiness,
     compute_page_pagexml_readiness,
 )
+
+if TYPE_CHECKING:
+    from src.app.domain.models import CanonicalDocument
 
 
 def compute_export_eligibility(
@@ -70,10 +74,10 @@ def _aggregate_levels(levels: list[ReadinessLevel]) -> ReadinessLevel:
     if not levels:
         return ReadinessLevel.NONE
 
-    if all(l == ReadinessLevel.FULL for l in levels):
+    if all(lv == ReadinessLevel.FULL for lv in levels):
         return ReadinessLevel.FULL
-    if all(l == ReadinessLevel.NONE for l in levels):
+    if all(lv == ReadinessLevel.NONE for lv in levels):
         return ReadinessLevel.NONE
-    if any(l in (ReadinessLevel.FULL, ReadinessLevel.PARTIAL) for l in levels):
+    if any(lv in (ReadinessLevel.FULL, ReadinessLevel.PARTIAL) for lv in levels):
         return ReadinessLevel.PARTIAL
     return ReadinessLevel.DEGRADED

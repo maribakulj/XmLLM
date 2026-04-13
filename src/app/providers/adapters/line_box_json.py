@@ -17,18 +17,22 @@ since the provider doesn't segment words. The block is inferred.
 
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
 from src.app.domain.models import (
     CanonicalDocument,
     Geometry,
     Provenance,
     RawProviderPayload,
 )
-from src.app.domain.models.geometry import GeometryContext
 from src.app.domain.models.status import EvidenceType, GeometryStatus, InputType
 from src.app.geometry.bbox import union_all
 from src.app.geometry.normalization import xyxy_to_xywh
 from src.app.normalization.canonical_builder import CanonicalBuilder
 from src.app.providers.adapters.base import BaseAdapter
+
+if TYPE_CHECKING:
+    from src.app.domain.models.geometry import GeometryContext
 
 
 class LineBoxJsonAdapter(BaseAdapter):

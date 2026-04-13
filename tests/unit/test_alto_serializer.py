@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 from lxml import etree
-
 from src.app.domain.models import (
     AltoReadiness,
     CanonicalDocument,

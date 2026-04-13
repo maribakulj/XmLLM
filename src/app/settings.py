@@ -7,14 +7,15 @@ via the SPACE_ID environment variable.
 from __future__ import annotations
 
 import os
-from enum import Enum
+from enum import StrEnum
+from functools import lru_cache
 from pathlib import Path
 
 from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
-class AppMode(str, Enum):
+class AppMode(StrEnum):
     LOCAL = "local"
     SPACE = "space"
 
@@ -113,6 +114,7 @@ class Settings(BaseSettings):
                 os.environ.setdefault("HF_HOME", str(self.hf_home))
 
 
+@lru_cache(maxsize=1)
 def get_settings() -> Settings:
-    """Factory for dependency injection (FastAPI Depends)."""
+    """Factory for dependency injection (FastAPI Depends). Cached singleton."""
     return Settings()

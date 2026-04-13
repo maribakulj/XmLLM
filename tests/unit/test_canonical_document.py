@@ -6,19 +6,16 @@ import json
 
 import pytest
 from pydantic import ValidationError
-
 from src.app.domain.models import (
     AltoReadiness,
     Audit,
     BlockRole,
     CanonicalDocument,
     EvidenceType,
-    ExportEligibility,
     Geometry,
     GeometryStatus,
     Hyphenation,
     InputType,
-    MissingCapability,
     NonTextKind,
     NonTextRegion,
     Page,
@@ -30,7 +27,6 @@ from src.app.domain.models import (
     TextRegion,
     Word,
 )
-
 
 # -- Helpers (reusable fixture builders) -------------------------------------
 

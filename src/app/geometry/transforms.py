@@ -6,10 +6,11 @@ is allowed in serializers (see AGENTS.md rule §5).
 
 from __future__ import annotations
 
-import math
+from typing import TYPE_CHECKING
 
-from src.app.geometry.bbox import BBoxTuple
-from src.app.geometry.polygon import PolygonPoints
+if TYPE_CHECKING:
+    from src.app.geometry.bbox import BBoxTuple
+    from src.app.geometry.polygon import PolygonPoints
 
 
 def rescale_bbox(bbox: BBoxTuple, factor: float) -> BBoxTuple:

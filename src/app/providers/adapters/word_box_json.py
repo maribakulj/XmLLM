@@ -13,13 +13,14 @@ within a single inferred text block.
 
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
 from src.app.domain.models import (
     CanonicalDocument,
     Geometry,
     Provenance,
     RawProviderPayload,
 )
-from src.app.domain.models.geometry import GeometryContext
 from src.app.domain.models.status import (
     EvidenceType,
     GeometryStatus,
@@ -29,6 +30,9 @@ from src.app.geometry.bbox import union_all
 from src.app.geometry.normalization import four_point_to_polygon, four_point_to_xywh
 from src.app.normalization.canonical_builder import CanonicalBuilder
 from src.app.providers.adapters.base import BaseAdapter
+
+if TYPE_CHECKING:
+    from src.app.domain.models.geometry import GeometryContext
 
 
 class WordBoxJsonAdapter(BaseAdapter):
@@ -163,8 +167,9 @@ class WordBoxJsonAdapter(BaseAdapter):
         points = item[0]
         text_conf = item[1]
         if not isinstance(points, list) or len(points) != 4:
+            got = len(points) if isinstance(points, list) else type(points).__name__
             raise ValueError(
-                f"Item {idx}: expected 4 polygon points, got {len(points) if isinstance(points, list) else type(points).__name__}"
+                f"Item {idx}: expected 4 polygon points, got {got}"
             )
         return points, text_conf
 

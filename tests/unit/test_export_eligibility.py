@@ -18,7 +18,7 @@ from src.app.domain.models import (
     Word,
 )
 from src.app.domain.models.status import InputType
-from src.app.policies.document_policy import DocumentPolicy, strict_policy
+from src.app.policies.document_policy import strict_policy
 from src.app.policies.export_policy import check_alto_export, check_page_export
 from src.app.validators.export_eligibility_validator import compute_export_eligibility
 
