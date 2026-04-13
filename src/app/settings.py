@@ -62,6 +62,7 @@ class Settings(BaseSettings):
 
     # -- HuggingFace ----------------------------------------------------------
     hf_home: Path | None = None
+    hf_token: str | None = Field(default=None, alias="HF_TOKEN")
 
     # -- Derived properties ---------------------------------------------------
 
@@ -106,6 +107,10 @@ class Settings(BaseSettings):
 
     def model_post_init(self, __context: object) -> None:
         """Apply Space-specific defaults after init."""
+        # Propagate HF token to environment so huggingface_hub picks it up
+        if self.hf_token:
+            os.environ.setdefault("HF_TOKEN", self.hf_token)
+
         if self.is_space:
             if self.storage_root == Path("./data"):
                 object.__setattr__(self, "storage_root", Path("/data"))
