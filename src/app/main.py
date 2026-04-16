@@ -18,6 +18,7 @@ from src.app.api import init_services, shutdown_services
 from src.app.api.routes_exports import router as exports_router
 from src.app.api.routes_health import router as health_router
 from src.app.api.routes_jobs import router as jobs_router
+from src.app.api.routes_ocr import router as ocr_router
 from src.app.api.routes_providers import router as providers_router
 from src.app.api.routes_viewer import router as viewer_router
 from src.app.settings import get_settings
@@ -54,6 +55,7 @@ app.add_middleware(
 # -- Register routers --------------------------------------------------------
 
 app.include_router(health_router)
+app.include_router(ocr_router)
 app.include_router(providers_router)
 app.include_router(jobs_router)
 app.include_router(exports_router)
